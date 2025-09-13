@@ -67,7 +67,6 @@ public class EditarTareaController implements Initializable {
             );
 
             proyectoLogica.updateTarea(codigoProyecto, tareaEditada);
-            mostrarInfo("Tarea actualizada correctamente");
             cerrarVentana();
 
         } catch (Exception e) {

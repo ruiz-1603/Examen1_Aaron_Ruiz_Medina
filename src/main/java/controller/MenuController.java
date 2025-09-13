@@ -188,7 +188,7 @@ public class MenuController implements Initializable {
 
         try {
             javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
-                    getClass().getResource("editarTarea.fxml")
+                    getClass().getResource("/org/example/examen1_aaron_ruiz_medina/editarTarea.fxml")
             );
             javafx.scene.Parent root = loader.load();
 

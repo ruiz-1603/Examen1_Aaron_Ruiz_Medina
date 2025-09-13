@@ -16,7 +16,7 @@
    <children>
       <Pane layoutX="31.0" layoutY="42.0" prefHeight="323.0" prefWidth="535.0">
          <children>
-            <TabPane layoutX="-2.0" layoutY="-4.0" prefHeight="558.0" prefWidth="796.0" tabClosingPolicy="UNAVAILABLE">
+            <TabPane layoutX="-2.0" layoutY="-10.0" prefHeight="564.0" prefWidth="736.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
                 <Tab text="Menu">
                   <content>

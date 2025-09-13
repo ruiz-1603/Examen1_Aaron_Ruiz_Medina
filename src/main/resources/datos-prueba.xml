@@ -161,17 +161,17 @@
                     <numero>1</numero>
                     <descripcion>Empezar implementacion de clases</descripcion>
                     <fechaFinalizacionEsperada>2025-12-02</fechaFinalizacionEsperada>
-                    <prioridad>BAJA</prioridad>
+                    <prioridad>MEDIA</prioridad>
                     <estado>EN_PROGRESO</estado>
                     <responsableId>2</responsableId>
                 </tarea>
                 <tarea>
                     <numero>2</numero>
-                    <descripcion>Hacer interfaz grafica</descripcion>
+                    <descripcion>Cargar bases de datos</descripcion>
                     <fechaFinalizacionEsperada>2025-09-23</fechaFinalizacionEsperada>
                     <prioridad>MEDIA</prioridad>
-                    <estado>EN_PROGRESO</estado>
-                    <responsableId>3</responsableId>
+                    <estado>EN_REVISION</estado>
+                    <responsableId>2</responsableId>
                 </tarea>
             </tareas>
         </proyecto>
