@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<proyectosData>
+    <usuarios>
+        <usuario>
+            <id>1</id>
+            <nombre>Ana García</nombre>
+            <email>ana.garcia@empresa.com</email>
+        </usuario>
+        <usuario>
+            <id>2</id>
+            <nombre>Carlos Rodríguez</nombre>
+            <email>carlos.rodriguez@empresa.com</email>
+        </usuario>
+        <usuario>
+            <id>3</id>
+            <nombre>María López</nombre>
+            <email>maria.lopez@empresa.com</email>
+        </usuario>
+        <usuario>
+            <id>4</id>
+            <nombre>Juan Pérez</nombre>
+            <email>juan.perez@empresa.com</email>
+        </usuario>
+        <usuario>
+            <id>5</id>
+            <nombre>Laura Martínez</nombre>
+            <email>laura.martinez@empresa.com</email>
+        </usuario>
+    </usuarios>
+    <proyectos>
+        <proyecto>
+            <codigo>1001</codigo>
+            <descripcion>Sistema de Gestión de Inventarios</descripcion>
+            <encargadoGeneralId>1</encargadoGeneralId>
+            <tareas>
+                <tarea>
+                    <numero>1</numero>
+                    <descripcion>Análisis de requerimientos</descripcion>
+                    <fechaFinalizacionEsperada>2025-10-15</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>EN_PROGRESO</estado>
+                    <responsableId>2</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>2</numero>
+                    <descripcion>Diseño de base de datos</descripcion>
+                    <fechaFinalizacionEsperada>2025-11-01</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>ABIERTA</estado>
+                    <responsableId>3</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>3</numero>
+                    <descripcion>Implementación del módulo de productos</descripcion>
+                    <fechaFinalizacionEsperada>2025-12-15</fechaFinalizacionEsperada>
+                    <prioridad>MEDIA</prioridad>
+                    <estado>ABIERTA</estado>
+                    <responsableId>4</responsableId>
+                </tarea>
+            </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>1002</codigo>
+            <descripcion>Plataforma de E-commerce</descripcion>
+            <encargadoGeneralId>5</encargadoGeneralId>
+            <tareas>
+                <tarea>
+                    <numero>1</numero>
+                    <descripcion>Configuración del entorno de desarrollo</descripcion>
+                    <fechaFinalizacionEsperada>2025-09-30</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>RESUELTA</estado>
+                    <responsableId>1</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>2</numero>
+                    <descripcion>Desarrollo del carrito de compras</descripcion>
+                    <fechaFinalizacionEsperada>2025-11-20</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>EN_REVISION</estado>
+                    <responsableId>2</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>3</numero>
+                    <descripcion>Integración de pasarela de pagos</descripcion>
+                    <fechaFinalizacionEsperada>2025-12-30</fechaFinalizacionEsperada>
+                    <prioridad>MEDIA</prioridad>
+                    <estado>ABIERTA</estado>
+                    <responsableId>3</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>4</numero>
+                    <descripcion>Testing de funcionalidades</descripcion>
+                    <fechaFinalizacionEsperada>2026-01-15</fechaFinalizacionEsperada>
+                    <prioridad>BAJA</prioridad>
+                    <estado>ABIERTA</estado>
+                    <responsableId>4</responsableId>
+                </tarea>
+            </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>1003</codigo>
+            <descripcion>App Móvil de Delivery</descripcion>
+            <encargadoGeneralId>2</encargadoGeneralId>
+            <tareas>
+                <tarea>
+                    <numero>1</numero>
+                    <descripcion>Prototipado de interfaces</descripcion>
+                    <fechaFinalizacionEsperada>2025-10-05</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>EN_PROGRESO</estado>
+                    <responsableId>5</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>2</numero>
+                    <descripcion>Desarrollo para Android</descripcion>
+                    <fechaFinalizacionEsperada>2025-12-01</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>ABIERTA</estado>
+                    <responsableId>1</responsableId>
+                </tarea>
+            </tareas>
+        </proyecto>
+    </proyectos>
+</proyectosData>
