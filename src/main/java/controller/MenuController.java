@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
 
-    // FXML Components - Proyectos
+    // FXML Components - Proyectos (NOMBRES CORREGIDOS)
     @FXML private ChoiceBox<Usuario> btnEncargado;
     @FXML private Button btnCrearProyecto;
     @FXML private TextField txtDescripcion;
@@ -29,21 +29,21 @@ public class MenuController implements Initializable {
     @FXML private TableColumn<ProyectoTableData, String> colEncargado;
     @FXML private TableColumn<ProyectoTableData, Integer> colNumeroTareas;
 
-    // FXML Components - Tareas
+    // FXML Components - Tareas (NOMBRES CORREGIDOS SEGÚN EL FXML)
     @FXML private Button btnCrearTarea;
     @FXML private Button btnEditar;
-    @FXML private TextField txtDescripcion1; // txtDescripcionTarea
+    @FXML private TextField txtDescripcionTarea; // Corregido
     @FXML private DatePicker dtpVencimiento;
-    @FXML private ChoiceBox<Tarea.Prioridad> btnEncargado21; // btnPrioridad
-    @FXML private ChoiceBox<Tarea.Estado> btnEncargado2; // btnEstado
-    @FXML private ChoiceBox<Usuario> btnEncargado1; // btnResponsable
+    @FXML private ChoiceBox<Tarea.Prioridad> btnPrioridad; // Corregido
+    @FXML private ChoiceBox<Tarea.Estado> btnEstado; // Corregido
+    @FXML private ChoiceBox<Usuario> btnResponsable; // Corregido
     @FXML private TableView<TareaTableData> tblTareas;
-    @FXML private TableColumn<TareaTableData, Integer> colCodigo1; // colNumeroTarea
-    @FXML private TableColumn<TareaTableData, String> colDescripcion1; // colDescripcionTarea
-    @FXML private TableColumn<TareaTableData, String> colEncargado1; // colVencimiento
-    @FXML private TableColumn<TareaTableData, String> colNumeroTareas1; // colPrioridad
+    @FXML private TableColumn<TareaTableData, Integer> colNumero; // Corregido
+    @FXML private TableColumn<TareaTableData, String> colDescripcionTarea; // Corregido
+    @FXML private TableColumn<TareaTableData, String> colVencimiento; // Corregido
+    @FXML private TableColumn<TareaTableData, String> colPrioridad; // Corregido
     @FXML private TableColumn<TareaTableData, String> colEstado;
-    @FXML private TableColumn<TareaTableData, String> colEncargadoTarea;
+    @FXML private TableColumn<TareaTableData, String> colAsignado; // Corregido
 
     // Lógica de negocio
     private ProyectoLogica proyectoLogica;
@@ -55,16 +55,39 @@ public class MenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            proyectoLogica = new ProyectoLogica("src/main/resources/datos-prueba.xml");
+            String[] possiblePaths = {
+                    "src/main/resources/datos-prueba.xml",
+                    "datos-prueba.xml",
+                    System.getProperty("user.dir") + "/src/main/resources/datos-prueba.xml"
+            };
 
-            // Cargar usuarios
+            String xmlPath = null;
+            for (String path : possiblePaths) {
+                if (java.nio.file.Files.exists(java.nio.file.Path.of(path))) {
+                    xmlPath = path;
+                    break;
+                }
+            }
+            if (xmlPath == null) {
+                URL resourceUrl = getClass().getResource("/datos-prueba.xml");
+                if (resourceUrl != null) {
+                    xmlPath = resourceUrl.getPath();
+                } else {
+                    // Como último recurso, crear el archivo en el directorio actual
+                    xmlPath = "datos-prueba.xml";
+                }
+            }
+
+            System.out.println("Usando ruta: " + xmlPath);
+            proyectoLogica = new ProyectoLogica(xmlPath);
+
             usuarios = proyectoLogica.findAllUsuarios();
+            System.out.println("Usuarios cargados: " + usuarios.size());
 
             setupTableColumns();
             setupChoiceBoxes();
             loadData();
 
-            // Configurar listeners
             tblProyectos.getSelectionModel().selectedItemProperty().addListener(
                     (obs, oldSelection, newSelection) -> {
                         if (newSelection != null) {
@@ -73,26 +96,29 @@ public class MenuController implements Initializable {
                         }
                     });
 
+            System.out.println("Inicialización completada exitosamente");
+
         } catch (Exception e) {
-            showAlert("Error", "No se pudo inicializar la aplicación: " + e.getMessage());
+            System.err.println("Error completo durante la inicialización:");
             e.printStackTrace();
+            showAlert("Error", "No se pudo inicializar la aplicación: " + e.getMessage());
         }
     }
 
     private void setupTableColumns() {
-
+        // Columnas de Proyectos
         colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
         colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         colEncargado.setCellValueFactory(new PropertyValueFactory<>("encargado"));
         colNumeroTareas.setCellValueFactory(new PropertyValueFactory<>("numeroTareas"));
 
-
-        colCodigo1.setCellValueFactory(new PropertyValueFactory<>("numero"));
-        colDescripcion1.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        colEncargado1.setCellValueFactory(new PropertyValueFactory<>("fechaVencimiento"));
-        colNumeroTareas1.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
+        // Columnas de Tareas (CORREGIDAS)
+        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
+        colDescripcionTarea.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
+        colVencimiento.setCellValueFactory(new PropertyValueFactory<>("fechaVencimiento"));
+        colPrioridad.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
         colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colEncargadoTarea.setCellValueFactory(new PropertyValueFactory<>("responsable"));
+        colAsignado.setCellValueFactory(new PropertyValueFactory<>("responsable"));
 
         tblProyectos.setItems(proyectos);
         tblTareas.setItems(tareas);
@@ -100,12 +126,9 @@ public class MenuController implements Initializable {
 
     private void setupChoiceBoxes() {
         btnEncargado.setItems(FXCollections.observableArrayList(usuarios));
-
-        btnEncargado1.setItems(FXCollections.observableArrayList(usuarios));
-
-        btnEncargado21.setItems(FXCollections.observableArrayList(Tarea.Prioridad.values()));
-
-        btnEncargado2.setItems(FXCollections.observableArrayList(Tarea.Estado.values()));
+        btnResponsable.setItems(FXCollections.observableArrayList(usuarios));
+        btnPrioridad.setItems(FXCollections.observableArrayList(Tarea.Prioridad.values()));
+        btnEstado.setItems(FXCollections.observableArrayList(Tarea.Estado.values()));
     }
 
     private void loadData() {
@@ -190,11 +213,11 @@ public class MenuController implements Initializable {
                 return;
             }
 
-            String descripcion = txtDescripcion1.getText();
+            String descripcion = txtDescripcionTarea.getText(); // Corregido
             LocalDate fechaVencimiento = dtpVencimiento.getValue();
-            Tarea.Prioridad prioridad = btnEncargado21.getValue();
-            Tarea.Estado estado = btnEncargado2.getValue();
-            Usuario responsable = btnEncargado1.getValue();
+            Tarea.Prioridad prioridad = btnPrioridad.getValue(); // Corregido
+            Tarea.Estado estado = btnEstado.getValue(); // Corregido
+            Usuario responsable = btnResponsable.getValue(); // Corregido
 
             if (descripcion == null || descripcion.trim().isEmpty()) {
                 showAlert("Error", "La descripción de la tarea es obligatoria");
@@ -224,11 +247,11 @@ public class MenuController implements Initializable {
             Tarea nuevaTarea = new Tarea(0, descripcion, fechaVencimiento, prioridad, estado, responsable);
             proyectoLogica.createTarea(proyectoSeleccionado.getCodigo(), nuevaTarea);
 
-            txtDescripcion1.clear();
+            txtDescripcionTarea.clear(); // Corregido
             dtpVencimiento.setValue(null);
-            btnEncargado21.setValue(null);
-            btnEncargado2.setValue(null);
-            btnEncargado1.setValue(null);
+            btnPrioridad.setValue(null); // Corregido
+            btnEstado.setValue(null); // Corregido
+            btnResponsable.setValue(null); // Corregido
 
             loadTareasForProyecto(proyectoSeleccionado.getCodigo());
             loadData(); // Para actualizar el número de tareas en la tabla de proyectos
@@ -249,16 +272,16 @@ public class MenuController implements Initializable {
         }
 
         try {
-            txtDescripcion1.setText(tareaSeleccionada.getDescripcion());
+            txtDescripcionTarea.setText(tareaSeleccionada.getDescripcion()); // Corregido
             dtpVencimiento.setValue(LocalDate.parse(tareaSeleccionada.getFechaVencimiento()));
-            btnEncargado21.setValue(Tarea.Prioridad.valueOf(tareaSeleccionada.getPrioridad()));
-            btnEncargado2.setValue(Tarea.Estado.valueOf(tareaSeleccionada.getEstado()));
+            btnPrioridad.setValue(Tarea.Prioridad.valueOf(tareaSeleccionada.getPrioridad())); // Corregido
+            btnEstado.setValue(Tarea.Estado.valueOf(tareaSeleccionada.getEstado())); // Corregido
 
             Usuario responsable = usuarios.stream()
                     .filter(u -> u.getNombre().equals(tareaSeleccionada.getResponsable()))
                     .findFirst()
                     .orElse(null);
-            btnEncargado1.setValue(responsable);
+            btnResponsable.setValue(responsable); // Corregido
 
         } catch (Exception e) {
             showAlert("Error", "No se pudo cargar la tarea para editar: " + e.getMessage());

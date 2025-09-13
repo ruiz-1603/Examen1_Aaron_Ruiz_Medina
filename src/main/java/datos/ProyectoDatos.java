@@ -1,6 +1,5 @@
 package datos;
 
-
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
@@ -12,16 +11,23 @@ import java.util.Objects;
 public class ProyectoDatos {
 
     private final Path xmlPath;
-    private final JAXBContext ctx;
+    private JAXBContext ctx;
     private ProyectoConector cache;
 
     public ProyectoDatos(String filePath) {
         try {
             this.xmlPath = Path.of(Objects.requireNonNull(filePath));
-            this.ctx = JAXBContext.newInstance(ProyectoConector.class, ProyectoEntity.class,
-                    TareaEntity.class, UsuarioEntity.class);
+            System.out.println("Ruta del archivo XML: " + xmlPath.toAbsolutePath());
+
+            this.ctx = JAXBContext.newInstance(
+                    ProyectoConector.class,
+                    ProyectoEntity.class,
+                    TareaEntity.class,
+                    UsuarioEntity.class
+            );
+
         } catch (Exception e) {
-            throw new RuntimeException("Error inicializando JAXBContext", e);
+            throw new RuntimeException("Error inicializando: " + e.getMessage(), e);
         }
     }
 
@@ -29,11 +35,7 @@ public class ProyectoDatos {
         try {
             if (cache != null) return cache;
 
-            if (!Files.exists(xmlPath)) {
-                cache = new ProyectoConector();
-                save(cache);
-                return cache;
-            }
+            System.out.println("Cargando datos desde: " + xmlPath.toAbsolutePath());
 
             Unmarshaller u = ctx.createUnmarshaller();
             cache = (ProyectoConector) u.unmarshal(xmlPath.toFile());
@@ -43,7 +45,7 @@ public class ProyectoDatos {
 
             return cache;
         } catch (Exception e) {
-            throw new RuntimeException("Error cargando XML: " + xmlPath, e);
+            throw new RuntimeException("Error cargando XML: " + xmlPath + " - " + e.getMessage(), e);
         }
     }
 
@@ -55,12 +57,17 @@ public class ProyectoDatos {
 
             File out = xmlPath.toFile();
             File parent = out.getParentFile();
-            if (parent != null) parent.mkdirs();
+            if (parent != null && !parent.exists()) {
+                boolean created = parent.mkdirs();
+                System.out.println("Directorio padre creado: " + created);
+            }
 
             m.marshal(data, out);
             cache = data;
+            System.out.println("Datos guardados exitosamente en: " + xmlPath.toAbsolutePath());
+
         } catch (Exception e) {
-            throw new RuntimeException("Error guardando XML: " + xmlPath, e);
+            throw new RuntimeException("Error guardando XML: " + xmlPath + " - " + e.getMessage(), e);
         }
     }
 

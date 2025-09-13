@@ -121,5 +121,20 @@
                 </tarea>
             </tareas>
         </proyecto>
+        <proyecto>
+            <codigo>1004</codigo>
+            <descripcion>Sistema de Asistencia UNA</descripcion>
+            <encargadoGeneralId>4</encargadoGeneralId>
+            <tareas>
+                <tarea>
+                    <numero>1</numero>
+                    <descripcion>Iniciar Interfaz</descripcion>
+                    <fechaFinalizacionEsperada>2025-09-26</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>EN_PROGRESO</estado>
+                    <responsableId>4</responsableId>
+                </tarea>
+            </tareas>
+        </proyecto>
     </proyectos>
 </proyectosData>

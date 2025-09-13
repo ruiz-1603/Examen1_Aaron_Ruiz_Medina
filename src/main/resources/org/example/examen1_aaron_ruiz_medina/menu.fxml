@@ -12,7 +12,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 
-
 <AnchorPane prefHeight="598.0" prefWidth="864.0" xmlns="http://javafx.com/javafx/24.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MenuController">
    <children>
       <Pane layoutX="31.0" layoutY="42.0" prefHeight="323.0" prefWidth="535.0">
@@ -40,21 +39,21 @@
                               <Label layoutX="14.0" layoutY="286.0" text="Tareas" />
                               <Label layoutX="148.0" layoutY="286.0" text="Descripcion" />
                               <Label layoutX="568.0" layoutY="286.0" text="Estado" />
-                              <ChoiceBox id="btnResponsable" fx:id="btnEncargado1" layoutX="628.0" layoutY="308.0" prefHeight="26.0" prefWidth="60.0" />
+                              <ChoiceBox id="btnResponsable" fx:id="btnResponsable" layoutX="628.0" layoutY="308.0" prefHeight="26.0" prefWidth="60.0" />
                               <Button id="btnCrearTarea" fx:id="btnCrearTarea" layoutX="18.0" layoutY="309.0" mnemonicParsing="false" onAction="#CrearTarea" text="Crear" />
-                              <TextField id="txtDescripcionTarea" fx:id="txtDescripcion1" layoutX="142.0" layoutY="309.0" prefHeight="26.0" prefWidth="142.0" />
+                              <TextField id="txtDescripcionTarea" fx:id="txtDescripcionTarea" layoutX="142.0" layoutY="309.0" prefHeight="26.0" prefWidth="142.0" />
                               <TableView id="tblTareas" fx:id="tblTareas" layoutX="18.0" layoutY="361.0" prefHeight="154.0" prefWidth="675.0">
                                  <columns>
-                                    <TableColumn id="colNumeroTarea" fx:id="colCodigo1" prefWidth="75.0" text="Numero" />
-                                    <TableColumn id="colDescripcionTarea" fx:id="colDescripcion1" prefWidth="128.00006103515625" text="Descripcion" />
-                                    <TableColumn id="colVencimiento" fx:id="colEncargado1" prefWidth="134.4000244140625" text="Vence" />
-                                    <TableColumn id="colPrioridad" fx:id="colNumeroTareas1" prefWidth="98.4000244140625" text="Prioridad" />
-                                    <TableColumn id="colEstado" prefWidth="92.79998779296875" text="Estado" />
-                                    <TableColumn id="colEncargadoTarea" prefWidth="140.7999267578125" text="Asignado" />
+                                    <TableColumn id="colNumeroTarea" fx:id="colNumero" prefWidth="75.0" text="Numero" />
+                                    <TableColumn id="colDescripcionTarea" fx:id="colDescripcionTarea" prefWidth="128.00006103515625" text="Descripcion" />
+                                    <TableColumn id="colVencimiento" fx:id="colVencimiento" prefWidth="134.4000244140625" text="Vence" />
+                                    <TableColumn id="colPrioridad" fx:id="colPrioridad" prefWidth="98.4000244140625" text="Prioridad" />
+                                    <TableColumn id="colEstado" fx:id="colEstado" prefWidth="92.79998779296875" text="Estado" />
+                                    <TableColumn id="colEncargadoTarea" fx:id="colAsignado" prefWidth="140.7999267578125" text="Asignado" />
                                  </columns>
                               </TableView>
-                              <ChoiceBox id="btnEstado" fx:id="btnEncargado2" layoutX="560.0" layoutY="308.0" prefHeight="26.0" prefWidth="52.0" />
-                              <ChoiceBox id="btnPrioridad" fx:id="btnEncargado21" layoutX="501.0" layoutY="308.0" prefHeight="26.0" prefWidth="52.0" />
+                              <ChoiceBox id="btnEstado" fx:id="btnEstado" layoutX="560.0" layoutY="308.0" prefHeight="26.0" prefWidth="52.0" />
+                              <ChoiceBox id="btnPrioridad" fx:id="btnPrioridad" layoutX="501.0" layoutY="308.0" prefHeight="26.0" prefWidth="52.0" />
                               <Label layoutX="496.0" layoutY="286.0" text="Prioridad" />
                               <Label layoutX="624.0" layoutY="286.0" text="Responsable" />
                               <DatePicker id="dtpVencimiento" fx:id="dtpVencimiento" layoutX="298.0" layoutY="309.0" />
@@ -62,11 +61,6 @@
                               <Button id="btnEditar" fx:id="btnEditar" layoutX="74.0" layoutY="308.0" mnemonicParsing="false" onAction="#EditarTarea" text="Editar" />
                            </children>
                         </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text="Informacion">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                   </content>
                 </Tab>
               </tabs>
