@@ -10,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import logica.ProyectoLogica;
 import model.Proyecto;
 import model.Tarea;
-import model.Usuario;
+import model.Encargado;
 
 import java.net.URL;
 import java.time.LocalDate;
@@ -19,8 +19,7 @@ import java.util.ResourceBundle;
 
 public class MenuController implements Initializable {
 
-    // FXML Components - Proyectos (NOMBRES CORREGIDOS)
-    @FXML private ChoiceBox<Usuario> btnEncargado;
+    @FXML private ChoiceBox<Encargado> btnEncargado;
     @FXML private Button btnCrearProyecto;
     @FXML private TextField txtDescripcion;
     @FXML private TableView<ProyectoTableData> tblProyectos;
@@ -29,14 +28,13 @@ public class MenuController implements Initializable {
     @FXML private TableColumn<ProyectoTableData, String> colEncargado;
     @FXML private TableColumn<ProyectoTableData, Integer> colNumeroTareas;
 
-    // FXML Components - Tareas (NOMBRES CORREGIDOS SEGÚN EL FXML)
     @FXML private Button btnCrearTarea;
     @FXML private Button btnEditar;
     @FXML private TextField txtDescripcionTarea; // Corregido
     @FXML private DatePicker dtpVencimiento;
     @FXML private ChoiceBox<Tarea.Prioridad> btnPrioridad; // Corregido
     @FXML private ChoiceBox<Tarea.Estado> btnEstado; // Corregido
-    @FXML private ChoiceBox<Usuario> btnResponsable; // Corregido
+    @FXML private ChoiceBox<Encargado> btnResponsable; // Corregido
     @FXML private TableView<TareaTableData> tblTareas;
     @FXML private TableColumn<TareaTableData, Integer> colNumero; // Corregido
     @FXML private TableColumn<TareaTableData, String> colDescripcionTarea; // Corregido
@@ -45,11 +43,10 @@ public class MenuController implements Initializable {
     @FXML private TableColumn<TareaTableData, String> colEstado;
     @FXML private TableColumn<TareaTableData, String> colAsignado; // Corregido
 
-    // Lógica de negocio
     private ProyectoLogica proyectoLogica;
     private ObservableList<ProyectoTableData> proyectos = FXCollections.observableArrayList();
     private ObservableList<TareaTableData> tareas = FXCollections.observableArrayList();
-    private List<Usuario> usuarios;
+    private List<Encargado> usuarios;
     private ProyectoTableData proyectoSeleccionado;
 
     @Override
@@ -178,7 +175,7 @@ public class MenuController implements Initializable {
     private void CrearProyecto() {
         try {
             String descripcion = txtDescripcion.getText();
-            Usuario encargado = btnEncargado.getValue();
+            Encargado encargado = btnEncargado.getValue();
 
             if (descripcion == null || descripcion.trim().isEmpty()) {
                 showAlert("Error", "La descripción del proyecto es obligatoria");
@@ -217,7 +214,7 @@ public class MenuController implements Initializable {
             LocalDate fechaVencimiento = dtpVencimiento.getValue();
             Tarea.Prioridad prioridad = btnPrioridad.getValue(); // Corregido
             Tarea.Estado estado = btnEstado.getValue(); // Corregido
-            Usuario responsable = btnResponsable.getValue(); // Corregido
+            Encargado responsable = btnResponsable.getValue(); // Corregido
 
             if (descripcion == null || descripcion.trim().isEmpty()) {
                 showAlert("Error", "La descripción de la tarea es obligatoria");
@@ -277,7 +274,7 @@ public class MenuController implements Initializable {
             btnPrioridad.setValue(Tarea.Prioridad.valueOf(tareaSeleccionada.getPrioridad())); // Corregido
             btnEstado.setValue(Tarea.Estado.valueOf(tareaSeleccionada.getEstado())); // Corregido
 
-            Usuario responsable = usuarios.stream()
+            Encargado responsable = usuarios.stream()
                     .filter(u -> u.getNombre().equals(tareaSeleccionada.getResponsable()))
                     .findFirst()
                     .orElse(null);

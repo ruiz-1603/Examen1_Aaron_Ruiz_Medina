@@ -12,12 +12,12 @@ public class Tarea {
     private LocalDate fechaFinalizacionEsperada;
     private Prioridad prioridad;
     private Estado estado;
-    private Usuario responsable;
+    private Encargado responsable;
 
     public Tarea() {}
 
     public Tarea(int numero, String descripcion, LocalDate fechaFinalizacionEsperada,
-                 Prioridad prioridad, Estado estado, Usuario responsable) {
+                 Prioridad prioridad, Estado estado, Encargado responsable) {
         this.numero = numero;
         this.descripcion = descripcion;
         this.fechaFinalizacionEsperada = fechaFinalizacionEsperada;
@@ -43,6 +43,6 @@ public class Tarea {
     public Estado getEstado() { return estado; }
     public void setEstado(Estado estado) { this.estado = estado; }
 
-    public Usuario getResponsable() { return responsable; }
-    public void setResponsable(Usuario responsable) { this.responsable = responsable; }
+    public Encargado getResponsable() { return responsable; }
+    public void setResponsable(Encargado responsable) { this.responsable = responsable; }
 }

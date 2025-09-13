@@ -1,10 +1,10 @@
 package logica;
 import datos.UsuarioEntity;
-import model.Usuario;
+import model.Encargado;
 
 public class UsuarioMapper {
 
-    public static UsuarioEntity toEntity(Usuario usuario) {
+    public static UsuarioEntity toEntity(Encargado usuario) {
         if (usuario == null) return null;
 
         UsuarioEntity entity = new UsuarioEntity();
@@ -15,9 +15,9 @@ public class UsuarioMapper {
         return entity;
     }
 
-    public static Usuario toModel(UsuarioEntity entity) {
+    public static Encargado toModel(UsuarioEntity entity) {
         if (entity == null) return null;
 
-        return new Usuario(entity.getId(), entity.getNombre(), entity.getEmail());
+        return new Encargado(entity.getId(), entity.getNombre(), entity.getEmail());
     }
 }

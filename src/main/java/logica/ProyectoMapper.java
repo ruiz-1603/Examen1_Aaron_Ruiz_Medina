@@ -3,7 +3,7 @@ import datos.ProyectoEntity;
 import datos.TareaEntity;
 import model.Proyecto;
 import model.Tarea;
-import model.Usuario;
+import model.Encargado;
 
 import java.util.List;
 import java.util.Map;
@@ -28,14 +28,14 @@ public class ProyectoMapper {
         return entity;
     }
 
-    public static Proyecto toModel(ProyectoEntity entity, Usuario encargado, Map<Integer, Usuario> usuariosMap) {
+    public static Proyecto toModel(ProyectoEntity entity, Encargado encargado, Map<Integer, Encargado> usuariosMap) {
         if (entity == null) return null;
 
         Proyecto proyecto = new Proyecto(entity.getCodigo(), entity.getDescripcion(), encargado);
 
         List<Tarea> tareas = entity.getTareas().stream()
                 .map(tareaEntity -> {
-                    Usuario responsable = usuariosMap.get(tareaEntity.getResponsableId());
+                    Encargado responsable = usuariosMap.get(tareaEntity.getResponsableId());
                     return TareaMapper.toModel(tareaEntity, responsable);
                 })
                 .collect(Collectors.toList());

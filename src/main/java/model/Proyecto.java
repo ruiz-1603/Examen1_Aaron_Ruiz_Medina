@@ -6,14 +6,14 @@ import java.util.List;
 public class Proyecto {
     private int codigo;
     private String descripcion;
-    private Usuario encargadoGeneral;
+    private Encargado encargadoGeneral;
     private List<Tarea> tareas;
 
     public Proyecto() {
         this.tareas = new ArrayList<>();
     }
 
-    public Proyecto(int codigo, String descripcion, Usuario encargadoGeneral) {
+    public Proyecto(int codigo, String descripcion, Encargado encargadoGeneral) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.encargadoGeneral = encargadoGeneral;
@@ -27,8 +27,8 @@ public class Proyecto {
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public Usuario getEncargadoGeneral() { return encargadoGeneral; }
-    public void setEncargadoGeneral(Usuario encargadoGeneral) { this.encargadoGeneral = encargadoGeneral; }
+    public Encargado getEncargadoGeneral() { return encargadoGeneral; }
+    public void setEncargadoGeneral(Encargado encargadoGeneral) { this.encargadoGeneral = encargadoGeneral; }
 
     public List<Tarea> getTareas() { return tareas; }
     public void setTareas(List<Tarea> tareas) { this.tareas = tareas; }

@@ -1,7 +1,7 @@
 package logica;
 import datos.TareaEntity;
 import model.Tarea;
-import model.Usuario;
+import model.Encargado;
 
 public class TareaMapper {
 
@@ -19,7 +19,7 @@ public class TareaMapper {
         return entity;
     }
 
-    public static Tarea toModel(TareaEntity entity, Usuario responsable) {
+    public static Tarea toModel(TareaEntity entity, Encargado responsable) {
         if (entity == null) return null;
 
         Tarea.Prioridad prioridad = null;

@@ -5,7 +5,7 @@ import datos.ProyectoEntity;
 import datos.UsuarioEntity;
 import model.Proyecto;
 import model.Tarea;
-import model.Usuario;
+import model.Encargado;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,29 +19,20 @@ public class ProyectoLogica {
     }
 
 
-    public List<Usuario> findAllUsuarios() {
+    public List<Encargado> findAllUsuarios() {
         ProyectoConector data = store.load();
         return data.getUsuarios().stream()
                 .map(UsuarioMapper::toModel)
                 .collect(Collectors.toList());
     }
 
-    public Optional<Usuario> findUsuarioById(int id) {
-        ProyectoConector data = store.load();
-        return data.getUsuarios().stream()
-                .filter(u -> u.getId() == id)
-                .findFirst()
-                .map(UsuarioMapper::toModel);
-    }
-
-
     public List<Proyecto> findAllProyectos() {
         ProyectoConector data = store.load();
-        Map<Integer, Usuario> usuariosMap = createUsuariosMap(data);
+        Map<Integer, Encargado> usuariosMap = createUsuariosMap(data);
 
         return data.getProyectos().stream()
                 .map(proyectoEntity -> {
-                    Usuario encargado = usuariosMap.get(proyectoEntity.getEncargadoGeneralId());
+                    Encargado encargado = usuariosMap.get(proyectoEntity.getEncargadoGeneralId());
                     return ProyectoMapper.toModel(proyectoEntity, encargado, usuariosMap);
                 })
                 .collect(Collectors.toList());
@@ -49,13 +40,13 @@ public class ProyectoLogica {
 
     public Optional<Proyecto> findProyectoByCodigo(int codigo) {
         ProyectoConector data = store.load();
-        Map<Integer, Usuario> usuariosMap = createUsuariosMap(data);
+        Map<Integer, Encargado> usuariosMap = createUsuariosMap(data);
 
         return data.getProyectos().stream()
                 .filter(p -> p.getCodigo() == codigo)
                 .findFirst()
                 .map(proyectoEntity -> {
-                    Usuario encargado = usuariosMap.get(proyectoEntity.getEncargadoGeneralId());
+                    Encargado encargado = usuariosMap.get(proyectoEntity.getEncargadoGeneralId());
                     return ProyectoMapper.toModel(proyectoEntity, encargado, usuariosMap);
                 });
     }
@@ -71,7 +62,7 @@ public class ProyectoLogica {
             boolean codigoTomado = data.getProyectos().stream()
                     .anyMatch(p -> p.getCodigo() == nuevo.getCodigo());
             if (codigoTomado) {
-                throw new IllegalArgumentException("Ya existe un proyecto con código: " + nuevo.getCodigo());
+                throw new IllegalArgumentException("Ya existe un proyecto con codigo: " + nuevo.getCodigo());
             }
         }
 
@@ -82,9 +73,9 @@ public class ProyectoLogica {
         return nuevo;
     }
 
-    public Proyecto updateProyecto(Proyecto proyecto) {
+    public Proyecto updateProyecto(Proyecto proyecto) throws Exception {
         if (proyecto == null || proyecto.getCodigo() <= 0) {
-            throw new IllegalArgumentException("El proyecto a actualizar requiere un código válido.");
+            throw new IllegalArgumentException("El proyecto a actualizar requiere un codigo valido.");
         }
         validarProyecto(proyecto);
 
@@ -99,7 +90,7 @@ public class ProyectoLogica {
             }
         }
 
-        throw new NoSuchElementException("No existe proyecto con código: " + proyecto.getCodigo());
+        throw new Exception("No existe proyecto con ese codigo");
     }
 
 
@@ -111,7 +102,7 @@ public class ProyectoLogica {
         ProyectoEntity proyectoEntity = data.getProyectos().stream()
                 .filter(p -> p.getCodigo() == codigoProyecto)
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No existe proyecto con código: " + codigoProyecto));
+                .orElseThrow(() -> new NoSuchElementException("No existe proyecto con codigo: " + codigoProyecto));
 
         if (nuevaTarea.getNumero() <= 0) {
             int siguienteNumero = proyectoEntity.getTareas().stream()
@@ -123,7 +114,7 @@ public class ProyectoLogica {
             boolean numeroTomado = proyectoEntity.getTareas().stream()
                     .anyMatch(t -> t.getNumero() == nuevaTarea.getNumero());
             if (numeroTomado) {
-                throw new IllegalArgumentException("Ya existe una tarea con número: " + nuevaTarea.getNumero());
+                throw new IllegalArgumentException("Ya existe una tarea con numero: " + nuevaTarea.getNumero());
             }
         }
 
@@ -135,19 +126,17 @@ public class ProyectoLogica {
 
     public Tarea updateTarea(int codigoProyecto, Tarea tarea) {
         if (tarea == null || tarea.getNumero() <= 0) {
-            throw new IllegalArgumentException("La tarea a actualizar requiere un número válido.");
+            throw new IllegalArgumentException("La tarea a actualizar requiere un numero valido.");
         }
         validarTarea(tarea);
 
         ProyectoConector data = store.load();
 
-        // Buscar el proyecto
         ProyectoEntity proyectoEntity = data.getProyectos().stream()
                 .filter(p -> p.getCodigo() == codigoProyecto)
                 .findFirst()
-                .orElseThrow(() -> new NoSuchElementException("No existe proyecto con código: " + codigoProyecto));
+                .orElseThrow(() -> new NoSuchElementException("No existe proyecto con codigo: " + codigoProyecto));
 
-        // Actualizar la tarea
         for (int i = 0; i < proyectoEntity.getTareas().size(); i++) {
             if (proyectoEntity.getTareas().get(i).getNumero() == tarea.getNumero()) {
                 proyectoEntity.getTareas().set(i, TareaMapper.toEntity(tarea));
@@ -156,12 +145,12 @@ public class ProyectoLogica {
             }
         }
 
-        throw new NoSuchElementException("No existe tarea con número: " + tarea.getNumero() +
+        throw new NoSuchElementException("No existe tarea con numero: " + tarea.getNumero() +
                 " en el proyecto: " + codigoProyecto);
     }
 
 
-    private Map<Integer, Usuario> createUsuariosMap(ProyectoConector data) {
+    private Map<Integer, Encargado> createUsuariosMap(ProyectoConector data) {
         return data.getUsuarios().stream()
                 .collect(Collectors.toMap(
                         UsuarioEntity::getId,
@@ -174,7 +163,7 @@ public class ProyectoLogica {
             throw new IllegalArgumentException("Proyecto nulo.");
         }
         if (proyecto.getDescripcion() == null || proyecto.getDescripcion().trim().isEmpty()) {
-            throw new IllegalArgumentException("La descripción del proyecto es obligatoria.");
+            throw new IllegalArgumentException("La descripcion del proyecto es obligatoria.");
         }
         if (proyecto.getEncargadoGeneral() == null) {
             throw new IllegalArgumentException("El encargado general es obligatorio.");
@@ -186,10 +175,10 @@ public class ProyectoLogica {
             throw new IllegalArgumentException("Tarea nula.");
         }
         if (tarea.getDescripcion() == null || tarea.getDescripcion().trim().isEmpty()) {
-            throw new IllegalArgumentException("La descripción de la tarea es obligatoria.");
+            throw new IllegalArgumentException("La descripcion de la tarea es obligatoria.");
         }
         if (tarea.getFechaFinalizacionEsperada() == null) {
-            throw new IllegalArgumentException("La fecha de finalización esperada es obligatoria.");
+            throw new IllegalArgumentException("La fecha de finalizacion esperada es obligatoria.");
         }
         if (tarea.getFechaFinalizacionEsperada().isBefore(LocalDate.now())) {
             throw new IllegalArgumentException("La fecha de finalización no puede ser pasada.");
