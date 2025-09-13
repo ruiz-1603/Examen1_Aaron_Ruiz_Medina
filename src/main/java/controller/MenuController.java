@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 import logica.ProyectoLogica;
 import model.Proyecto;
 import model.Tarea;
@@ -79,7 +80,6 @@ public class MenuController implements Initializable {
             colEncargado.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getEncargadoGeneral().getNombre()));
             colNumeroTareas.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().getTareas().size()).asObject());
 
-            // Configuración de columnas de Tareas
             colNumero.setCellValueFactory(t -> new SimpleIntegerProperty(t.getValue().getNumero()).asObject());
             colDescripcionTarea.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getDescripcion()));
             colVencimiento.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getFechaFinalizacionEsperada().toString()));
@@ -186,84 +186,30 @@ public class MenuController implements Initializable {
             return;
         }
 
-        try{
-            Dialog<Tarea> dialog = crearDialogEditarTarea(seleccionada);
-            dialog.showAndWait().ifPresent(tareaEditada -> {
-                try {
-                    proyectoLogica.updateTarea(proyectoSeleccionado.getCodigo(), tareaEditada);
-                    cargarTareas(proyectoSeleccionado.getCodigo());
-                    cargarProyectos();
-                    mostrarInfo("Tarea actualizada");
-                } catch (Exception e) {
-                    mostrarError("Error al actualizar la tarea");
-                }
-            });
-        }catch(Exception e){
-            mostrarError("Error al editar la tarea");
+        try {
+            javafx.fxml.FXMLLoader loader = new javafx.fxml.FXMLLoader(
+                    getClass().getResource("editarTarea.fxml")
+            );
+            javafx.scene.Parent root = loader.load();
+
+            EditarTareaController controller = loader.getController();
+            controller.cargarDatos(seleccionada, usuarios, proyectoLogica, proyectoSeleccionado.getCodigo());
+
+            javafx.stage.Stage stage = new javafx.stage.Stage();
+            stage.setTitle("Editar Tarea");
+            stage.setScene(new javafx.scene.Scene(root));
+            stage.setResizable(false);
+            stage.initModality(javafx.stage.Modality.APPLICATION_MODAL);
+            stage.showAndWait();
+
+            cargarTareas(proyectoSeleccionado.getCodigo());
+            cargarProyectos();
+
+        } catch (Exception e) {
+            mostrarError("Error al abrir el editor: " + e.getMessage());
         }
     }
 
-    private Dialog<Tarea> crearDialogEditarTarea(Tarea tarea) {
-        Dialog<Tarea> dialog = new Dialog<>();
-        dialog.setTitle("Editar Tarea");
-        dialog.setHeaderText("Modificar datos de la tarea");
-
-        ButtonType guardarButton = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(guardarButton, ButtonType.CANCEL);
-
-        // Crear campos del formulario
-        TextField txtDesc = new TextField(tarea.getDescripcion());
-        DatePicker dtpFecha = new DatePicker(tarea.getFechaFinalizacionEsperada());
-        ChoiceBox<Tarea.Prioridad> cbPrioridad = new ChoiceBox<>(FXCollections.observableArrayList(Tarea.Prioridad.values()));
-        cbPrioridad.setValue(tarea.getPrioridad());
-        ChoiceBox<Tarea.Estado> cbEstado = new ChoiceBox<>(FXCollections.observableArrayList(Tarea.Estado.values()));
-        cbEstado.setValue(tarea.getEstado());
-        ChoiceBox<Encargado> cbResponsable = new ChoiceBox<>(FXCollections.observableArrayList(usuarios));
-        cbResponsable.setValue(tarea.getResponsable());
-
-        // Layout del formulario
-        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
-
-        grid.add(new Label("Descripción:"), 0, 0);
-        grid.add(txtDesc, 1, 0);
-        grid.add(new Label("Fecha vencimiento:"), 0, 1);
-        grid.add(dtpFecha, 1, 1);
-        grid.add(new Label("Prioridad:"), 0, 2);
-        grid.add(cbPrioridad, 1, 2);
-        grid.add(new Label("Estado:"), 0, 3);
-        grid.add(cbEstado, 1, 3);
-        grid.add(new Label("Responsable:"), 0, 4);
-        grid.add(cbResponsable, 1, 4);
-
-        dialog.getDialogPane().setContent(grid);
-
-        // Convertir resultado a Tarea
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == guardarButton) {
-                if (txtDesc.getText().isEmpty() || dtpFecha.getValue() == null ||
-                        cbPrioridad.getValue() == null || cbEstado.getValue() == null || cbResponsable.getValue() == null) {
-                    mostrarError("Todos los campos son obligatorios");
-                    return null;
-                }
-
-                Tarea tareaEditada = new Tarea(
-                        tarea.getNumero(), // Mantener el mismo número
-                        txtDesc.getText(),
-                        dtpFecha.getValue(),
-                        cbPrioridad.getValue(),
-                        cbEstado.getValue(),
-                        cbResponsable.getValue()
-                );
-                return tareaEditada;
-            }
-            return null;
-        });
-
-        return dialog;
-    }
 
     private void limpiarFormularioTarea() {
         txtDescripcionTarea.clear();

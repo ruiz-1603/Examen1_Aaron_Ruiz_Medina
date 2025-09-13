@@ -152,5 +152,28 @@
                 </tarea>
             </tareas>
         </proyecto>
+        <proyecto>
+            <codigo>1005</codigo>
+            <descripcion>Aplicacion para Escuela de Matematicas UNA</descripcion>
+            <encargadoGeneralId>3</encargadoGeneralId>
+            <tareas>
+                <tarea>
+                    <numero>1</numero>
+                    <descripcion>Empezar implementacion de clases</descripcion>
+                    <fechaFinalizacionEsperada>2025-12-02</fechaFinalizacionEsperada>
+                    <prioridad>BAJA</prioridad>
+                    <estado>EN_PROGRESO</estado>
+                    <responsableId>2</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>2</numero>
+                    <descripcion>Hacer interfaz grafica</descripcion>
+                    <fechaFinalizacionEsperada>2025-09-23</fechaFinalizacionEsperada>
+                    <prioridad>MEDIA</prioridad>
+                    <estado>EN_PROGRESO</estado>
+                    <responsableId>3</responsableId>
+                </tarea>
+            </tareas>
+        </proyecto>
     </proyectos>
 </proyectosData>
