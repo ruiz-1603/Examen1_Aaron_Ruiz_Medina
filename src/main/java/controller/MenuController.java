@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import logica.ProyectoLogica;
 import model.Proyecto;
 import model.Tarea;
@@ -22,331 +21,266 @@ public class MenuController implements Initializable {
     @FXML private ChoiceBox<Encargado> btnEncargado;
     @FXML private Button btnCrearProyecto;
     @FXML private TextField txtDescripcion;
-    @FXML private TableView<ProyectoTableData> tblProyectos;
-    @FXML private TableColumn<ProyectoTableData, Integer> colCodigo;
-    @FXML private TableColumn<ProyectoTableData, String> colDescripcion;
-    @FXML private TableColumn<ProyectoTableData, String> colEncargado;
-    @FXML private TableColumn<ProyectoTableData, Integer> colNumeroTareas;
+    @FXML private TableView<Proyecto> tblProyectos;
+    @FXML private TableColumn<Proyecto, Integer> colCodigo;
+    @FXML private TableColumn<Proyecto, String> colDescripcion;
+    @FXML private TableColumn<Proyecto, String> colEncargado;
+    @FXML private TableColumn<Proyecto, Integer> colNumeroTareas;
 
     @FXML private Button btnCrearTarea;
     @FXML private Button btnEditar;
-    @FXML private TextField txtDescripcionTarea; // Corregido
+    @FXML private TextField txtDescripcionTarea;
     @FXML private DatePicker dtpVencimiento;
-    @FXML private ChoiceBox<Tarea.Prioridad> btnPrioridad; // Corregido
-    @FXML private ChoiceBox<Tarea.Estado> btnEstado; // Corregido
-    @FXML private ChoiceBox<Encargado> btnResponsable; // Corregido
-    @FXML private TableView<TareaTableData> tblTareas;
-    @FXML private TableColumn<TareaTableData, Integer> colNumero; // Corregido
-    @FXML private TableColumn<TareaTableData, String> colDescripcionTarea; // Corregido
-    @FXML private TableColumn<TareaTableData, String> colVencimiento; // Corregido
-    @FXML private TableColumn<TareaTableData, String> colPrioridad; // Corregido
-    @FXML private TableColumn<TareaTableData, String> colEstado;
-    @FXML private TableColumn<TareaTableData, String> colAsignado; // Corregido
+    @FXML private ChoiceBox<Tarea.Prioridad> btnPrioridad;
+    @FXML private ChoiceBox<Tarea.Estado> btnEstado;
+    @FXML private ChoiceBox<Encargado> btnResponsable;
+    @FXML private TableView<Tarea> tblTareas;
+    @FXML private TableColumn<Tarea, Integer> colNumero;
+    @FXML private TableColumn<Tarea, String> colDescripcionTarea;
+    @FXML private TableColumn<Tarea, String> colVencimiento;
+    @FXML private TableColumn<Tarea, String> colPrioridad;
+    @FXML private TableColumn<Tarea, String> colEstado;
+    @FXML private TableColumn<Tarea, String> colAsignado;
 
     private ProyectoLogica proyectoLogica;
-    private ObservableList<ProyectoTableData> proyectos = FXCollections.observableArrayList();
-    private ObservableList<TareaTableData> tareas = FXCollections.observableArrayList();
+    private ObservableList<Proyecto> proyectos = FXCollections.observableArrayList();
+    private ObservableList<Tarea> tareas = FXCollections.observableArrayList();
     private List<Encargado> usuarios;
-    private ProyectoTableData proyectoSeleccionado;
+    private Proyecto proyectoSeleccionado;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            String[] possiblePaths = {
-                    "src/main/resources/datos-prueba.xml",
-                    "datos-prueba.xml",
-                    System.getProperty("user.dir") + "/src/main/resources/datos-prueba.xml"
-            };
-
-            String xmlPath = null;
-            for (String path : possiblePaths) {
-                if (java.nio.file.Files.exists(java.nio.file.Path.of(path))) {
-                    xmlPath = path;
-                    break;
-                }
-            }
-            if (xmlPath == null) {
-                URL resourceUrl = getClass().getResource("/datos-prueba.xml");
-                if (resourceUrl != null) {
-                    xmlPath = resourceUrl.getPath();
-                } else {
-                    // Como último recurso, crear el archivo en el directorio actual
-                    xmlPath = "datos-prueba.xml";
-                }
-            }
-
-            System.out.println("Usando ruta: " + xmlPath);
-            proyectoLogica = new ProyectoLogica(xmlPath);
-
+            proyectoLogica = new ProyectoLogica("src/main/resources/datos-prueba.xml");
             usuarios = proyectoLogica.findAllUsuarios();
-            System.out.println("Usuarios cargados: " + usuarios.size());
 
-            setupTableColumns();
-            setupChoiceBoxes();
-            loadData();
+            configurarTablas();
+            cargarChoiceBoxes();
+            cargarProyectos();
 
             tblProyectos.getSelectionModel().selectedItemProperty().addListener(
-                    (obs, oldSelection, newSelection) -> {
-                        if (newSelection != null) {
-                            proyectoSeleccionado = newSelection;
-                            loadTareasForProyecto(newSelection.getCodigo());
+                    (obs, old, nuevo) -> {
+                        if (nuevo != null) {
+                            proyectoSeleccionado = nuevo;
+                            cargarTareas(nuevo.getCodigo());
                         }
-                    });
-
-            System.out.println("Inicialización completada exitosamente");
-
-        } catch (Exception e) {
-            System.err.println("Error completo durante la inicialización:");
-            e.printStackTrace();
-            showAlert("Error", "No se pudo inicializar la aplicación: " + e.getMessage());
+                    }
+            );
+        }catch(Exception e){
+            mostrarError("Error al iniciar");
         }
     }
 
-    private void setupTableColumns() {
-        // Columnas de Proyectos
-        colCodigo.setCellValueFactory(new PropertyValueFactory<>("codigo"));
-        colDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        colEncargado.setCellValueFactory(new PropertyValueFactory<>("encargado"));
-        colNumeroTareas.setCellValueFactory(new PropertyValueFactory<>("numeroTareas"));
-
-        // Columnas de Tareas (CORREGIDAS)
-        colNumero.setCellValueFactory(new PropertyValueFactory<>("numero"));
-        colDescripcionTarea.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        colVencimiento.setCellValueFactory(new PropertyValueFactory<>("fechaVencimiento"));
-        colPrioridad.setCellValueFactory(new PropertyValueFactory<>("prioridad"));
-        colEstado.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        colAsignado.setCellValueFactory(new PropertyValueFactory<>("responsable"));
-
-        tblProyectos.setItems(proyectos);
-        tblTareas.setItems(tareas);
-    }
-
-    private void setupChoiceBoxes() {
-        btnEncargado.setItems(FXCollections.observableArrayList(usuarios));
-        btnResponsable.setItems(FXCollections.observableArrayList(usuarios));
-        btnPrioridad.setItems(FXCollections.observableArrayList(Tarea.Prioridad.values()));
-        btnEstado.setItems(FXCollections.observableArrayList(Tarea.Estado.values()));
-    }
-
-    private void loadData() {
+    private void configurarTablas() {
         try {
-            List<Proyecto> listaProyectos = proyectoLogica.findAllProyectos();
-            proyectos.clear();
+            // Configuración de columnas de Proyectos
+            colCodigo.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().getCodigo()).asObject());
+            colDescripcion.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getDescripcion()));
+            colEncargado.setCellValueFactory(p -> new SimpleStringProperty(p.getValue().getEncargadoGeneral().getNombre()));
+            colNumeroTareas.setCellValueFactory(p -> new SimpleIntegerProperty(p.getValue().getTareas().size()).asObject());
 
-            for (Proyecto proyecto : listaProyectos) {
-                ProyectoTableData data = new ProyectoTableData(
-                        proyecto.getCodigo(),
-                        proyecto.getDescripcion(),
-                        proyecto.getEncargadoGeneral().getNombre(),
-                        proyecto.getTareas().size()
-                );
-                proyectos.add(data);
-            }
+            // Configuración de columnas de Tareas
+            colNumero.setCellValueFactory(t -> new SimpleIntegerProperty(t.getValue().getNumero()).asObject());
+            colDescripcionTarea.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getDescripcion()));
+            colVencimiento.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getFechaFinalizacionEsperada().toString()));
+            colPrioridad.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getPrioridad().name()));
+            colEstado.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getEstado().name()));
+            colAsignado.setCellValueFactory(t -> new SimpleStringProperty(t.getValue().getResponsable().getNombre()));
 
-        } catch (Exception e) {
-            showAlert("Error", "No se pudieron cargar los datos: " + e.getMessage());
-            e.printStackTrace();
+            tblProyectos.setItems(proyectos);
+            tblTareas.setItems(tareas);
+        }catch(Exception e){
+            mostrarError("Error al configurar las tablas");
         }
     }
 
-    private void loadTareasForProyecto(int codigoProyecto) {
-        try {
+    private void cargarChoiceBoxes() {
+        try{
+            btnEncargado.setItems(FXCollections.observableArrayList(usuarios));
+            btnResponsable.setItems(FXCollections.observableArrayList(usuarios));
+            btnPrioridad.setItems(FXCollections.observableArrayList(Tarea.Prioridad.values()));
+            btnEstado.setItems(FXCollections.observableArrayList(Tarea.Estado.values()));
+        }catch(Exception e){
+            mostrarError("Error al cargar botones");
+        }
+    }
+
+    private void cargarProyectos() {
+        try{
+            proyectos.setAll(proyectoLogica.findAllProyectos());
+        }catch(Exception e){
+            mostrarError("Error al cargar los proyectos");
+        }
+    }
+
+    private void cargarTareas(int codigoProyecto) {
+        try{
             Proyecto proyecto = proyectoLogica.findProyectoByCodigo(codigoProyecto).orElse(null);
             if (proyecto != null) {
-                tareas.clear();
-                for (Tarea tarea : proyecto.getTareas()) {
-                    TareaTableData data = new TareaTableData(
-                            tarea.getNumero(),
-                            tarea.getDescripcion(),
-                            tarea.getFechaFinalizacionEsperada().toString(),
-                            tarea.getPrioridad().name(),
-                            tarea.getEstado().name(),
-                            tarea.getResponsable().getNombre()
-                    );
-                    tareas.add(data);
-                }
+                tareas.setAll(proyecto.getTareas());
             }
-        } catch (Exception e) {
-            showAlert("Error", "No se pudieron cargar las tareas: " + e.getMessage());
+        }catch(Exception e){
+            mostrarError("Error al cargar las tareas");
         }
     }
 
     @FXML
     private void CrearProyecto() {
+        String desc = txtDescripcion.getText();
+        Encargado enc = btnEncargado.getValue();
+
+        if (desc.isEmpty() || enc == null) {
+            mostrarError("Faltan datos");
+            return;
+        }
+
         try {
-            String descripcion = txtDescripcion.getText();
-            Encargado encargado = btnEncargado.getValue();
-
-            if (descripcion == null || descripcion.trim().isEmpty()) {
-                showAlert("Error", "La descripción del proyecto es obligatoria");
-                return;
-            }
-
-            if (encargado == null) {
-                showAlert("Error", "Debe seleccionar un encargado");
-                return;
-            }
-
-            Proyecto nuevoProyecto = new Proyecto(0, descripcion, encargado);
-            proyectoLogica.createProyecto(nuevoProyecto);
+            Proyecto p = new Proyecto(0, desc, enc);
+            proyectoLogica.createProyecto(p);
 
             txtDescripcion.clear();
             btnEncargado.setValue(null);
-
-            loadData();
-
-            showAlert("Éxito", "Proyecto creado exitosamente");
-
-        } catch (Exception e) {
-            showAlert("Error", "No se pudo crear el proyecto: " + e.getMessage());
+            cargarProyectos();
+            mostrarInfo("Proyecto creado");
+        }catch(Exception e){
+            mostrarError("Error al crear el proyecto");
         }
     }
 
     @FXML
     private void CrearTarea() {
+        if (proyectoSeleccionado == null) {
+            mostrarError("Selecciona un proyecto");
+            return;
+        }
+
+        String desc = txtDescripcionTarea.getText();
+        LocalDate fecha = dtpVencimiento.getValue();
+        Tarea.Prioridad prioridad = btnPrioridad.getValue();
+        Tarea.Estado estado = btnEstado.getValue();
+        Encargado responsable = btnResponsable.getValue();
+
+        if (desc.isEmpty() || fecha == null || prioridad == null || estado == null || responsable == null) {
+            mostrarError("Faltan datos");
+            return;
+        }
+
         try {
-            if (proyectoSeleccionado == null) {
-                showAlert("Error", "Debe seleccionar un proyecto primero");
-                return;
-            }
+            Tarea t = new Tarea(0, desc, fecha, prioridad, estado, responsable);
+            proyectoLogica.createTarea(proyectoSeleccionado.getCodigo(), t);
 
-            String descripcion = txtDescripcionTarea.getText(); // Corregido
-            LocalDate fechaVencimiento = dtpVencimiento.getValue();
-            Tarea.Prioridad prioridad = btnPrioridad.getValue(); // Corregido
-            Tarea.Estado estado = btnEstado.getValue(); // Corregido
-            Encargado responsable = btnResponsable.getValue(); // Corregido
-
-            if (descripcion == null || descripcion.trim().isEmpty()) {
-                showAlert("Error", "La descripción de la tarea es obligatoria");
-                return;
-            }
-
-            if (fechaVencimiento == null) {
-                showAlert("Error", "La fecha de vencimiento es obligatoria");
-                return;
-            }
-
-            if (prioridad == null) {
-                showAlert("Error", "La prioridad es obligatoria");
-                return;
-            }
-
-            if (estado == null) {
-                showAlert("Error", "El estado es obligatorio");
-                return;
-            }
-
-            if (responsable == null) {
-                showAlert("Error", "El responsable es obligatorio");
-                return;
-            }
-
-            Tarea nuevaTarea = new Tarea(0, descripcion, fechaVencimiento, prioridad, estado, responsable);
-            proyectoLogica.createTarea(proyectoSeleccionado.getCodigo(), nuevaTarea);
-
-            txtDescripcionTarea.clear(); // Corregido
-            dtpVencimiento.setValue(null);
-            btnPrioridad.setValue(null); // Corregido
-            btnEstado.setValue(null); // Corregido
-            btnResponsable.setValue(null); // Corregido
-
-            loadTareasForProyecto(proyectoSeleccionado.getCodigo());
-            loadData(); // Para actualizar el número de tareas en la tabla de proyectos
-
-            showAlert("Éxito", "Tarea creada exitosamente");
-
-        } catch (Exception e) {
-            showAlert("Error", "No se pudo crear la tarea: " + e.getMessage());
+            limpiarFormularioTarea();
+            cargarTareas(proyectoSeleccionado.getCodigo());
+            cargarProyectos();
+            mostrarInfo("Tarea creada");
+        }catch(Exception e){
+            mostrarError("Error al crear la tarea");
         }
     }
 
     @FXML
     private void EditarTarea() {
-        TareaTableData tareaSeleccionada = tblTareas.getSelectionModel().getSelectedItem();
-        if (tareaSeleccionada == null) {
-            showAlert("Error", "Debe seleccionar una tarea para editar");
+        Tarea seleccionada = tblTareas.getSelectionModel().getSelectedItem();
+        if (seleccionada == null) {
+            mostrarError("Selecciona una tarea");
             return;
         }
 
-        try {
-            txtDescripcionTarea.setText(tareaSeleccionada.getDescripcion()); // Corregido
-            dtpVencimiento.setValue(LocalDate.parse(tareaSeleccionada.getFechaVencimiento()));
-            btnPrioridad.setValue(Tarea.Prioridad.valueOf(tareaSeleccionada.getPrioridad())); // Corregido
-            btnEstado.setValue(Tarea.Estado.valueOf(tareaSeleccionada.getEstado())); // Corregido
-
-            Encargado responsable = usuarios.stream()
-                    .filter(u -> u.getNombre().equals(tareaSeleccionada.getResponsable()))
-                    .findFirst()
-                    .orElse(null);
-            btnResponsable.setValue(responsable); // Corregido
-
-        } catch (Exception e) {
-            showAlert("Error", "No se pudo cargar la tarea para editar: " + e.getMessage());
+        try{
+            Dialog<Tarea> dialog = crearDialogEditarTarea(seleccionada);
+            dialog.showAndWait().ifPresent(tareaEditada -> {
+                try {
+                    proyectoLogica.updateTarea(proyectoSeleccionado.getCodigo(), tareaEditada);
+                    cargarTareas(proyectoSeleccionado.getCodigo());
+                    cargarProyectos();
+                    mostrarInfo("Tarea actualizada");
+                } catch (Exception e) {
+                    mostrarError("Error al actualizar la tarea");
+                }
+            });
+        }catch(Exception e){
+            mostrarError("Error al editar la tarea");
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
+    private Dialog<Tarea> crearDialogEditarTarea(Tarea tarea) {
+        Dialog<Tarea> dialog = new Dialog<>();
+        dialog.setTitle("Editar Tarea");
+        dialog.setHeaderText("Modificar datos de la tarea");
+
+        ButtonType guardarButton = new ButtonType("Guardar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(guardarButton, ButtonType.CANCEL);
+
+        // Crear campos del formulario
+        TextField txtDesc = new TextField(tarea.getDescripcion());
+        DatePicker dtpFecha = new DatePicker(tarea.getFechaFinalizacionEsperada());
+        ChoiceBox<Tarea.Prioridad> cbPrioridad = new ChoiceBox<>(FXCollections.observableArrayList(Tarea.Prioridad.values()));
+        cbPrioridad.setValue(tarea.getPrioridad());
+        ChoiceBox<Tarea.Estado> cbEstado = new ChoiceBox<>(FXCollections.observableArrayList(Tarea.Estado.values()));
+        cbEstado.setValue(tarea.getEstado());
+        ChoiceBox<Encargado> cbResponsable = new ChoiceBox<>(FXCollections.observableArrayList(usuarios));
+        cbResponsable.setValue(tarea.getResponsable());
+
+        // Layout del formulario
+        javafx.scene.layout.GridPane grid = new javafx.scene.layout.GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new javafx.geometry.Insets(20, 150, 10, 10));
+
+        grid.add(new Label("Descripción:"), 0, 0);
+        grid.add(txtDesc, 1, 0);
+        grid.add(new Label("Fecha vencimiento:"), 0, 1);
+        grid.add(dtpFecha, 1, 1);
+        grid.add(new Label("Prioridad:"), 0, 2);
+        grid.add(cbPrioridad, 1, 2);
+        grid.add(new Label("Estado:"), 0, 3);
+        grid.add(cbEstado, 1, 3);
+        grid.add(new Label("Responsable:"), 0, 4);
+        grid.add(cbResponsable, 1, 4);
+
+        dialog.getDialogPane().setContent(grid);
+
+        // Convertir resultado a Tarea
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == guardarButton) {
+                if (txtDesc.getText().isEmpty() || dtpFecha.getValue() == null ||
+                        cbPrioridad.getValue() == null || cbEstado.getValue() == null || cbResponsable.getValue() == null) {
+                    mostrarError("Todos los campos son obligatorios");
+                    return null;
+                }
+
+                Tarea tareaEditada = new Tarea(
+                        tarea.getNumero(), // Mantener el mismo número
+                        txtDesc.getText(),
+                        dtpFecha.getValue(),
+                        cbPrioridad.getValue(),
+                        cbEstado.getValue(),
+                        cbResponsable.getValue()
+                );
+                return tareaEditada;
+            }
+            return null;
+        });
+
+        return dialog;
+    }
+
+    private void limpiarFormularioTarea() {
+        txtDescripcionTarea.clear();
+        dtpVencimiento.setValue(null);
+        btnPrioridad.setValue(null);
+        btnEstado.setValue(null);
+        btnResponsable.setValue(null);
+    }
+
+    private void mostrarError(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setContentText(mensaje);
         alert.showAndWait();
     }
 
-    public static class ProyectoTableData {
-        private final SimpleIntegerProperty codigo;
-        private final SimpleStringProperty descripcion;
-        private final SimpleStringProperty encargado;
-        private final SimpleIntegerProperty numeroTareas;
-
-        public ProyectoTableData(int codigo, String descripcion, String encargado, int numeroTareas) {
-            this.codigo = new SimpleIntegerProperty(codigo);
-            this.descripcion = new SimpleStringProperty(descripcion);
-            this.encargado = new SimpleStringProperty(encargado);
-            this.numeroTareas = new SimpleIntegerProperty(numeroTareas);
-        }
-
-        public int getCodigo() { return codigo.get(); }
-        public String getDescripcion() { return descripcion.get(); }
-        public String getEncargado() { return encargado.get(); }
-        public int getNumeroTareas() { return numeroTareas.get(); }
-
-        public SimpleIntegerProperty codigoProperty() { return codigo; }
-        public SimpleStringProperty descripcionProperty() { return descripcion; }
-        public SimpleStringProperty encargadoProperty() { return encargado; }
-        public SimpleIntegerProperty numeroTareasProperty() { return numeroTareas; }
-    }
-
-    public static class TareaTableData {
-        private final SimpleIntegerProperty numero;
-        private final SimpleStringProperty descripcion;
-        private final SimpleStringProperty fechaVencimiento;
-        private final SimpleStringProperty prioridad;
-        private final SimpleStringProperty estado;
-        private final SimpleStringProperty responsable;
-
-        public TareaTableData(int numero, String descripcion, String fechaVencimiento,
-                              String prioridad, String estado, String responsable) {
-            this.numero = new SimpleIntegerProperty(numero);
-            this.descripcion = new SimpleStringProperty(descripcion);
-            this.fechaVencimiento = new SimpleStringProperty(fechaVencimiento);
-            this.prioridad = new SimpleStringProperty(prioridad);
-            this.estado = new SimpleStringProperty(estado);
-            this.responsable = new SimpleStringProperty(responsable);
-        }
-
-        public int getNumero() { return numero.get(); }
-        public String getDescripcion() { return descripcion.get(); }
-        public String getFechaVencimiento() { return fechaVencimiento.get(); }
-        public String getPrioridad() { return prioridad.get(); }
-        public String getEstado() { return estado.get(); }
-        public String getResponsable() { return responsable.get(); }
-
-        public SimpleIntegerProperty numeroProperty() { return numero; }
-        public SimpleStringProperty descripcionProperty() { return descripcion; }
-        public SimpleStringProperty fechaVencimientoProperty() { return fechaVencimiento; }
-        public SimpleStringProperty prioridadProperty() { return prioridad; }
-        public SimpleStringProperty estadoProperty() { return estado; }
-        public SimpleStringProperty responsableProperty() { return responsable; }
+    private void mostrarInfo(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setContentText(mensaje);
     }
 }

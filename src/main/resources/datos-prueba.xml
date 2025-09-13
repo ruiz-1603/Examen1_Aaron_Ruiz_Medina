@@ -129,6 +129,22 @@
                 <tarea>
                     <numero>1</numero>
                     <descripcion>Iniciar Interfaz</descripcion>
+                    <fechaFinalizacionEsperada>2025-09-30</fechaFinalizacionEsperada>
+                    <prioridad>BAJA</prioridad>
+                    <estado>EN_REVISION</estado>
+                    <responsableId>4</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>2</numero>
+                    <descripcion>Iniciar Interfaz</descripcion>
+                    <fechaFinalizacionEsperada>2025-09-26</fechaFinalizacionEsperada>
+                    <prioridad>ALTA</prioridad>
+                    <estado>EN_PROGRESO</estado>
+                    <responsableId>3</responsableId>
+                </tarea>
+                <tarea>
+                    <numero>3</numero>
+                    <descripcion>Iniciar Interfa</descripcion>
                     <fechaFinalizacionEsperada>2025-09-26</fechaFinalizacionEsperada>
                     <prioridad>ALTA</prioridad>
                     <estado>EN_PROGRESO</estado>
