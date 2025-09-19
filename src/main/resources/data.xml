@@ -128,19 +128,19 @@
             <tareas>
                 <tarea>
                     <numero>1</numero>
-                    <descripcion>Iniciar Interfaz</descripcion>
+                    <descripcion>Cargar implementaciones</descripcion>
                     <fechaFinalizacionEsperada>2025-09-30</fechaFinalizacionEsperada>
                     <prioridad>BAJA</prioridad>
                     <estado>EN_REVISION</estado>
-                    <responsableId>4</responsableId>
+                    <responsableId>2</responsableId>
                 </tarea>
                 <tarea>
                     <numero>2</numero>
-                    <descripcion>Iniciar Interfaz</descripcion>
+                    <descripcion>Avanzar en parte grafica</descripcion>
                     <fechaFinalizacionEsperada>2025-09-26</fechaFinalizacionEsperada>
-                    <prioridad>ALTA</prioridad>
-                    <estado>EN_PROGRESO</estado>
-                    <responsableId>3</responsableId>
+                    <prioridad>MEDIA</prioridad>
+                    <estado>EN_REVISION</estado>
+                    <responsableId>5</responsableId>
                 </tarea>
                 <tarea>
                     <numero>3</numero>
@@ -174,6 +174,27 @@
                     <responsableId>2</responsableId>
                 </tarea>
             </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>1006</codigo>
+            <descripcion>Proyecto Bases de Datos Biblioteca</descripcion>
+            <encargadoGeneralId>2</encargadoGeneralId>
+            <tareas>
+                <tarea>
+                    <numero>1</numero>
+                    <descripcion>Hacer UML de clases</descripcion>
+                    <fechaFinalizacionEsperada>2025-09-26</fechaFinalizacionEsperada>
+                    <prioridad>BAJA</prioridad>
+                    <estado>EN_REVISION</estado>
+                    <responsableId>2</responsableId>
+                </tarea>
+            </tareas>
+        </proyecto>
+        <proyecto>
+            <codigo>1007</codigo>
+            <descripcion>l</descripcion>
+            <encargadoGeneralId>2</encargadoGeneralId>
+            <tareas/>
         </proyecto>
     </proyectos>
 </proyectosData>

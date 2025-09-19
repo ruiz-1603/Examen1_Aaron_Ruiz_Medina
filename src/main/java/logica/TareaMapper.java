@@ -1,5 +1,5 @@
 package logica;
-import datos.TareaEntity;
+import datos.entity.TareaEntity;
 import model.Tarea;
 import model.Encargado;
 

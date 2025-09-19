@@ -1,6 +1,6 @@
 package logica;
-import datos.ProyectoEntity;
-import datos.TareaEntity;
+import datos.entity.ProyectoEntity;
+import datos.entity.TareaEntity;
 import model.Proyecto;
 import model.Tarea;
 import model.Encargado;

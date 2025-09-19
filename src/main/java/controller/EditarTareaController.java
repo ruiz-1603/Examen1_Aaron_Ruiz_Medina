@@ -1,5 +1,4 @@
 package controller;
-
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -55,7 +54,6 @@ public class EditarTareaController implements Initializable {
         if (!validarCampos()) {
             return;
         }
-
         try {
             Tarea tareaEditada = new Tarea(
                     tareaOriginal.getNumero(),
@@ -65,7 +63,6 @@ public class EditarTareaController implements Initializable {
                     cbEstado.getValue(),
                     cbResponsable.getValue()
             );
-
             proyectoLogica.updateTarea(codigoProyecto, tareaEditada);
             cerrarVentana();
 
@@ -86,7 +83,7 @@ public class EditarTareaController implements Initializable {
 
     private boolean validarCampos() {
         if (txtDescripcion.getText().trim().isEmpty()) {
-            mostrarError("La descripción es obligatoria");
+            mostrarError("La descripcion es obligatoria");
             return false;
         }
 
@@ -121,14 +118,6 @@ public class EditarTareaController implements Initializable {
     private void mostrarError(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
-    }
-
-    private void mostrarInfo(String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Éxito");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();

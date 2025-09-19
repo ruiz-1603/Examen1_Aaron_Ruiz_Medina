@@ -20,7 +20,6 @@ public class Proyecto {
         this.tareas = new ArrayList<>();
     }
 
-    // Getters y Setters
     public int getCodigo() { return codigo; }
     public void setCodigo(int codigo) { this.codigo = codigo; }
 

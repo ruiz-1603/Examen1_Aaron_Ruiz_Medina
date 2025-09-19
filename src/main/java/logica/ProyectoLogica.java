@@ -1,8 +1,8 @@
 package logica;
 import datos.ProyectoConector;
 import datos.ProyectoDatos;
-import datos.ProyectoEntity;
-import datos.UsuarioEntity;
+import datos.entity.ProyectoEntity;
+import datos.entity.UsuarioEntity;
 import model.Proyecto;
 import model.Tarea;
 import model.Encargado;
@@ -59,9 +59,9 @@ public class ProyectoLogica {
         if (nuevo.getCodigo() <= 0) {
             nuevo.setCodigo(generarSiguienteCodigoProyecto(data));
         } else {
-            boolean codigoTomado = data.getProyectos().stream()
+            boolean codeTomado = data.getProyectos().stream()
                     .anyMatch(p -> p.getCodigo() == nuevo.getCodigo());
-            if (codigoTomado) {
+            if (codeTomado) {
                 throw new IllegalArgumentException("Ya existe un proyecto con codigo: " + nuevo.getCodigo());
             }
         }
@@ -181,7 +181,7 @@ public class ProyectoLogica {
             throw new IllegalArgumentException("La fecha de finalizacion esperada es obligatoria.");
         }
         if (tarea.getFechaFinalizacionEsperada().isBefore(LocalDate.now())) {
-            throw new IllegalArgumentException("La fecha de finalización no puede ser pasada.");
+            throw new IllegalArgumentException("La fecha de finalizacion no puede ser pasada.");
         }
         if (tarea.getPrioridad() == null) {
             throw new IllegalArgumentException("La prioridad es obligatoria.");

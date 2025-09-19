@@ -1,10 +1,12 @@
 package datos;
 
+import datos.entity.ProyectoEntity;
+import datos.entity.TareaEntity;
+import datos.entity.UsuarioEntity;
 import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.Marshaller;
 import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 

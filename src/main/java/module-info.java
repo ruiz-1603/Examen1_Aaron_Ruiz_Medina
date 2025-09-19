@@ -12,4 +12,5 @@ module org.example.examen1_aaron_ruiz_medina {
 
     opens controller to javafx.fxml;
     exports controller;
+    opens datos.entity to jakarta.xml.bind;
 }

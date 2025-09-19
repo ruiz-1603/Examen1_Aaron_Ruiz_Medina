@@ -1,5 +1,7 @@
 package datos;
 
+import datos.entity.ProyectoEntity;
+import datos.entity.UsuarioEntity;
 import jakarta.xml.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;

@@ -6,7 +6,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import logica.ProyectoLogica;
 import model.Proyecto;
 import model.Tarea;
@@ -52,7 +51,7 @@ public class MenuController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            proyectoLogica = new ProyectoLogica("src/main/resources/datos-prueba.xml");
+            proyectoLogica = new ProyectoLogica("src/main/resources/data.xml");
             usuarios = proyectoLogica.findAllUsuarios();
 
             configurarTablas();

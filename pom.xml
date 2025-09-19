@@ -26,7 +26,6 @@
             <version>17.0.6</version>
         </dependency>
 
-        <!-- JAXB API -->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -74,7 +73,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                org.example.examen1_aaron_ruiz_medina/org.example.examen1_aaron_ruiz_medina.HelloApplication
+                                org.example.examen1_aaron_ruiz_medina/org.example.examen1_aaron_ruiz_medina.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

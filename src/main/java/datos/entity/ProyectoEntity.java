@@ -1,4 +1,4 @@
-package datos;
+package datos.entity;
 
 import jakarta.xml.bind.annotation.*;
 import java.util.ArrayList;

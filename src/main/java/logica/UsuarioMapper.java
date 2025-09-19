@@ -1,5 +1,5 @@
 package logica;
-import datos.UsuarioEntity;
+import datos.entity.UsuarioEntity;
 import model.Encargado;
 
 public class UsuarioMapper {
